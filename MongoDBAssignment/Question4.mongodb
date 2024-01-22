@@ -1,0 +1,8 @@
+// 4. Find the drinkers that have visited any bars either on 
+// Saturday or Sunday (or both)   
+// [hint: go check out "$elemMatch" function]:
+
+use('BarBeerDrinker');
+db.Drinkers.find(
+    {"history" : { "$elemMatch" : {"day" : "Sunday", "day" : "Saturday"} } }
+ );

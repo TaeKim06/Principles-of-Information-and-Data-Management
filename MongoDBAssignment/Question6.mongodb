@@ -1,0 +1,6 @@
+use('BarBeerDrinker');
+db.Drinkers.insertOne(
+    {"name" : "Lucy", "city" : "Edison", "addr": "433 river Road", "phone" : "732-571-9871,", 
+    "Food":[{"name" :"French fries"}, {"name": "Onion rings"}, {"name" : "Nachos"}, {"name" : "Wings"}]
+    }
+)

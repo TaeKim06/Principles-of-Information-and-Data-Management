@@ -1,0 +1,9 @@
+//3.  Return how many bars sell more than 5 kinds of beers.
+
+use('BarBeerDrinker');
+db.Sells.aggregate([
+    {"$group" : { "_id": "$bar", "count": { "$sum": 1 } } },
+    {"$match": {"_id" :{ "$ne" : null } , "count" : {"$gt": 5} } },
+    {"$group" : {"_id" : "$_id", "ansCount" : {"$sum" : 1} } },
+    {"$project": {"Bars" : "$ansCount", "_id" : 0} }
+]);

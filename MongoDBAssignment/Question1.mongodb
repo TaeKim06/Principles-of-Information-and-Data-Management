@@ -1,0 +1,4 @@
+use('BarBeerDrinker');
+db.Bars.find(
+   {$or : [{"phone" : ""}, {"addr" : ""} ] }
+)

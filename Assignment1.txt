@@ -1,0 +1,114 @@
+/*Question 1 */
+SELECT DISTINCT D.name FROM Drinkers D JOIN Likes L ON D.name = L.drinker WHERE D.phone LIKE '917-%' AND L.beer = "Budweiser";
+Name:
+
+
+/*Question 2 */
+SELECT Beer FROM Likes WHERE drinker = "Mike";
+Blue Moon
+Bud
+Budweiser
+Creamy Dark
+Hefeweizen
+Michelob Golden Draft Light
+Original Premium Lager
+Original Premium Lager Dog
+Killian's
+
+/* Question 3 */
+Select City, numOfDrinkers from (Select city, count(*)  numOfDrinkers from Drinkers D group by D.city) 
+myDerivedTable group by city having numOfDrinkers = (SELECT MAX(numOfDrinkers) FROM 
+(Select myDerivedTable.city, numOfDrinkers from (Select city, count(*)  numOfDrinkers from Drinkers D group by D.city) 
+myDerivedTable group by city)derivedtable);
+
+Edison	5
+New York	5
+
+/* Question 4 */ (two cities with the same amount of drinkers so Edison used)
+SELECT DISTINCT F.bar FROM Frequents F JOIN Drinkers D ON F.drinker = D.name WHERE D.city = "Edison";
+Gecko Grill
+Cabana
+Blue Angel
+Seven Bamboo
+
+/*Question 5 */
+Select distinct S.bar from Sells S JOIN Likes L on S.beer = L.beer Where L.drinker = 'Mike';
+A.P. Stump's
+Blue Angel
+Blue Tattoo
+Britannia Arms
+Cabana
+Caravan
+Club 175
+Coconut Willie's Cocktail Lounge
+Gecko Grill
+Giza Hookah Lounge
+Hedley Club
+Seven Bamboo
+The Backbeat
+The Blank Club
+The Shark and Rose
+
+/* Question 6 */
+SELECT DISTINCT L1.drinker FROM Likes L1 JOIN Likes L2 ON L1.beer = L2.beer WHERE 
+(L1.drinker != "Mike" AND L1.drinker != "Joe") AND (L2.drinker = "Mike" OR L2.drinker = "Joe");
+John
+Vince
+Jesse
+Justin
+Devarsh
+Sahil
+Gunjan
+Yuhan
+
+/* Question 7 */
+SELECT DISTINCT S.bar FROM Sells S JOIN Likes L ON S.beer = L.beer WHERE L.drinker IN
+(Select distinct F.drinker From Frequents F Join S where F.bar = S.bar);
+Caravan
+Cabana
+The Shark and Rose
+A.P. Stump's
+Blue Angel
+Gecko Grill
+Seven Bamboo
+
+/*Question 8 */
+SELECT DISTINCT L.drinker FROM Likes L JOIN Sells S ON L.beer = S.beer WHERE S.bar = 'Caravan';
+John
+Mike
+Vince
+Jesse
+Justin
+Sahil
+Gunjan
+Yuhan
+
+/* Question 9 */
+SELECT DISTINCT S.bar FROM Sells S WHERE S.beer = "Budweiser" and S.bar IN 
+(SELECT F.Bar FROM Frequents F JOIN Likes L ON L.drinker = F.drinker and L.beer = "Budweiser");
+Cabana
+Caravan
+Gecko Grill
+Seven Bamboo
+The Shark and Rose
+
+/* Question 10 */
+SELECT DISTINCT F1.bar FROM Frequents F1 JOIN Frequents F2 ON F1.bar = F2.bar Where F1.drinker = "Mike" and F2.drinker = "Steve"; 
+blank
+
+/* Question 11*/
+SELECT DISTINCT L.drinker FROM Likes L WHERE L.drinker != "Mike" AND 2<= 
+(SELECT count(*) FROM Likes L JOIN Likes L2 ON L.beer = L2.beer WHERE L2.drinker = "Mike");
+John
+Vince
+Joe
+Jesse
+Justin
+Devarsh
+Sahil
+Gunjan
+Yuhan
+
+/* Question 12 */
+SELECT S.bar from Sells S JOIN Likes L ON S.beer = L.beer WHERE L.drinker = "Mike";
+

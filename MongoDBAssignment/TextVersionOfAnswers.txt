@@ -1,0 +1,112 @@
+QUESTION 1:
+
+use('BarBeerDrinker');
+db.Bars.find(
+   {$or : [{"phone" : ""}, {"addr" : ""} ] }
+)
+
+
+
+QUESTION 2:
+
+use('BarBeerDrinker');
+// 2. Find the city that has more than 4 bars. Return the city name and the number of bars it has.
+db.Bars.aggregate([
+    {"$group" : { "_id": "$city", "count": { "$sum": 1 } } },
+    {"$match": {"_id" :{ "$ne" : null } , "count" : {"$gt": 4} } },
+    {"$project": {"City" : "$_id", "_id" : 0, "Number of Bars" : "$count"} }
+]);
+
+
+
+QUESTION 3:
+
+use('BarBeerDrinker');
+db.Sells.aggregate([
+    {"$group" : { "_id": "$bar", "count": { "$sum": 1 } } },
+    {"$match": {"_id" :{ "$ne" : null } , "count" : {"$gt": 5} } },
+    {"$group" : {"_id" : "$_id", "ansCount" : {"$sum" : 1} } },
+    {"$project": {"Bars" : "$ansCount", "_id" : 0} }
+]);
+
+
+QUESTION 5:
+
+use('BarBeerDrinker');
+db.Drinkers.aggregate(
+    {$unwind : "$history"},
+    {$unwind : "$history.set_of_beers"},
+    {"$match" : {"history.set_of_beers" : "Blue Tattoo"} } ,
+    {"$group" : { "_id": "$name",  "count": { "$sum": 1 } } },
+    {"$match" : {"count" : {"$gt": 1} } },
+    {$project : {"Name" : "$_id", "_id" : 0}}
+);
+
+
+QUESTION 6:
+
+use('BarBeerDrinker');
+db.Drinkers.insertOne(
+    {"name" : "Lucy", "city" : "Edison", "addr": "433 river Road", "phone" : "732-571-9871,", 
+    "Food":[{"name" :"French fries"}, {"name": "Onion rings"}, {"name" : "Nachos"}, {"name" : "Wings"}]
+    }
+)
+
+
+QUESTION 7:
+
+R=
+[{   "AB": 11,   "CD": [00, 10] },
+ {   "AB": 01,   "CD": [10, 00, 11] }]
+
+
+Value count of 14
+
+
+
+
+QUESTION 8:
+
+from pymongo import MongoClient
+client = MongoClient()
+
+client = MongoClient(host="localhost", port=27017)
+db = client["BarBeerDrinker"]
+col = db["Penna"]
+empty = col.distinct("vote.timestamp")
+
+
+pipe = [{
+    "$unwind" : "$vote"},
+    {"$group" : {"_id" : "$vote.timestamp", "count" : {"$sum" : "$vote.totalvotes"}} },
+    {"$sort" : {"count" : 1}},
+    {"$project": {"timestamp" : "$_id", "sumVotes" : "$count", "_id" : 0}}]
+
+
+
+TestOutput = col.aggregate(pipeline=pipe)
+maxDifference = 0
+count = 0
+holder = TestOutput.next()
+prev = holder["sumVotes"]
+while count < len(empty) - 1:
+    holder = TestOutput.next()
+    temp =  holder["sumVotes"]
+    if (temp - prev) > maxDifference:
+        maxDifference = (temp - prev)
+        timestamp = holder["timestamp"]
+    prev = temp
+    # print(maxDifference)
+    # print("\n")
+    count += 1
+
+print(f"The maximum difference in timestamps was: {maxDifference}")
+print(f"At timestamp: {timestamp}")
+
+
+PRINTS: 
+
+The maximum difference in timestamps was: 612173
+At timestamp: 2020-11-04 07:21:12
+
+

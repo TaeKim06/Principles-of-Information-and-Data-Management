@@ -1,0 +1,16 @@
+//5. Find the drinker who has ordered "Blue Tattoo" beer more than once (in the 
+// drinker's history)
+
+use('BarBeerDrinker');
+db.Drinkers.aggregate(
+    {$unwind : "$history"},
+    {$unwind : "$history.set_of_beers"},
+    {"$match" : {"history.set_of_beers" : "Blue Tattoo"} } ,
+    {"$group" : { "_id": "$name",  "count": { "$sum": 1 } } },
+    {"$match" : {"count" : {"$gt": 1} } },
+    {$project : {"Name" : "$_id", "_id" : 0}}
+);
+
+// db.Drinkers.find(
+//     {"history" : { "$elemMatch" : {"day" : "Sunday", "day" : "Saturday"} } }
+// ); set_of_beers
